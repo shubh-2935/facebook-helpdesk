@@ -138,3 +138,10 @@ h3{
 .grid-container .user-profile p{
     margin-top: auto;
 }
+
+#login-status{
+    color: red;
+}
+#register-status{
+    color: red;
+}
