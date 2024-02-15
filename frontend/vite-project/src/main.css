@@ -32,7 +32,6 @@ body{
 h3{
     margin: 0;
 }
-
 .auth-box{
     width: 25vw;
     height: 50vh;
@@ -83,6 +82,7 @@ h3{
 .auth-box.connect.disconnect{
     height: 40vh;
 }
+
 .auth-box.connect.disconnect .delete{
     background-color: red;
 }

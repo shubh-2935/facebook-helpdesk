@@ -1,71 +1,77 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const ConnectFacebook = () => {
   const [loggedIn, setLoggedIn] = useState(false);
+  const [userName, setUserName] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Load the Facebook SDK asynchronously
-    window.fbAsyncInit = function() {
-      FB.init({
-        appId      : '1528586027742258',
-        cookie     : true,
-        xfbml      : true,
-        version    : 'v19.0'
-      });
-
-      // Check login status when the SDK is initialized
-      FB.getLoginStatus(function(response) {
-        if (response.status === 'connected') {
-          setLoggedIn(true);
-          testAPI(); // Fetch user information
-        }
-      });
-    };
-
-    // Load the SDK script
-    (function(d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) return;
-      js = d.createElement(s); js.id = id;
-      js.src = "https://connect.facebook.net/en_US/sdk.js";
-      fjs.parentNode.insertBefore(js, fjs);   
-    }(document, 'script', 'facebook-jssdk'));
+    checkLoginStatus();
   }, []);
 
-  const handleConnect = () => {
-    // Initiate the Facebook login flow
+  const checkLoginStatus = () => {
+    FB.getLoginStatus(function(response) {
+      if (response.status === 'connected') {
+        
+        setLoggedIn(true);
+        // Fetch user's name if logged in
+        fetchUserName();
+      } else {
+        setLoggedIn(false);
+        
+      }
+    });
+  };
+
+  const fetchUserName = () => {
+    FB.api('/me', { fields: 'name' }, function(response) {
+      setUserName(response.name); // Update state with user's name
+    });
+  };
+
+  const callThis = () => {
     FB.login(function(response) {
       if (response.authResponse) {
+        console.log('Welcome! Fetching your information....');
+        fetchUserName(); // Fetch user's name after login
         setLoggedIn(true);
-        testAPI(); // Fetch user information
       } else {
         console.log('User cancelled login or did not fully authorize.');
       }
-    }, { scope: 'email' });
-  };
-
-  const testAPI = () => {
-    // Fetch user information using the Graph API
-    FB.api('/me', function(response) {
-      console.log('Successful login for: ' + response.name + ' and the details are below');
-      console.log(response);
-      // Handle user information as needed
     });
   };
 
   return (
     <div className='new-div'>
-      <div className='auth-box connect'>
+      <div className='auth-box connect disconnect'>
         <h2>Facebook Page Integration</h2>
-        {!loggedIn ? (
-          <button onClick={handleConnect}>Connect Page</button>
+        {loggedIn ? (
+          <div style={{
+              "display": "flex",
+              "flexDirection": "column",
+              "alignItems": "center",
+              "justifyContent": "center",
+              }}>
+            {userName && 
+              <>
+              <h3>Hello, {userName}!</h3>
+              <br></br>
+              <div style={{"display": "flex",
+                "alignItems": "center",
+                "flexDirection": "column",
+              }}>
+                <button style={{margin: 0}} onClick={() => { navigate('/agent-screen') }}>Reply to Messages</button>
+                <button className='delete' style={{margin: '5px 0 0'}} onClick={() => { navigate('/delete-facebook') }}>Delete Integration</button>
+              
+              </div>
+              </>
+                }
+            
+          </div>
         ) : (
-          <p>You are logged in with Facebook.</p>
+          <button id="loginBtn" onClick={callThis}>Login with Facebook</button>
         )}
-        <div className="fb-login-button" scope="public_profile,email" data-size="large" data-button-type="continue_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="false">
-        </div>
-        <div id="status">
-        </div>
       </div>
     </div>
   );

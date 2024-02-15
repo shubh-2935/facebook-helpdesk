@@ -1,9 +1,20 @@
 import React from 'react';
 
 const DeleteFacebook = () => {
+  
   const handleDelete = () => {
-    // Logic to delete Facebook page
-  };
+
+      //if we do have a non-null response.session, call FB.logout(),
+      //the JS method will log the user out of Facebook and remove any authorization cookies
+      FB.logout((response) => {
+        //if we dont have a session (which means the user has been logged out, redirect the user)
+        if (!response.session) {
+            window.location = "/connect-facebook";
+            return;
+        }
+      });
+      
+  }
 
   return (
     <div className='new-div'>

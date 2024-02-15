@@ -5,20 +5,26 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + React</title>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
   </head>
   <body>
     <div id="root"></div>
     
-
-  <!-- Load the Facebook SDK asynchronously -->
-    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
-
     <script type="module" src="/src/main.jsx"></script>
+    <!-- Add a button for Facebook login -->
+
+    <script>
+      // Initialize the Facebook SDK
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId: '1528586027742258',
+          xfbml: true,
+          version: 'v19.0'
+        });
+      };
+
+      // Add an event listener to the login button
     
-    <!-- The JS SDK Login Button -->
-    
-    
-    
-    <!-- Load the JS SDK asynchronously -->
-    </body>
+    </script>
+  </body>
 </html>
